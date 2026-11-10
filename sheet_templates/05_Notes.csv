@@ -1,0 +1,8 @@
+run_date,topic,detail,source_link,owner
+2026-11-10,method,"Public business data only. No homeowner PII. No bought lists. Engineer does not contact businesses. Outreach: Matt; send: Neal; privacy: Nic before use.",,Isuru
+2026-11-10,scope,"LGAs: Wollongong, Shellharbour, Shoalhaven, Wingecarribee. Trade: roofing. Done: Google Sheet tabs Businesses / Area demand / Roof signals / Map pack + Notes. Neal spot-checks 20 rows.",,Isuru
+2026-11-10,suburb_list,"ABS ASGS Ed3 CG_SAL_2021_LGA_2021.csv. Primary LGA (ratio>=0.5). 271 suburbs. See data/processed/suburb_list.csv.",https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs/edition-3-july-2021-june-2026/access-and-downloads/correspondences,Isuru
+2026-11-10,gap,Deadline MISSING — Neal to set.,,Isuru
+2026-11-10,gap,DataForSEO spend cap MISSING — Neal to set.,,Isuru
+2026-11-10,gap,Google Places spend cap MISSING — Neal to set.,,Isuru
+2026-11-10,apis,"ABN Lookup GUID (free). DataForSEO (approved Neal 6 Nov 2026). Google Places official API backup only.",,Isuru

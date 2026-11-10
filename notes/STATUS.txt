@@ -1,0 +1,15 @@
+Status — 2026-11-10
+===================
+
+DONE
+- Project folder scaffold
+- Sheet tab templates (5 CSVs)
+- ABS suburb list for 4 LGAs (271 suburbs)
+- Parameterised config (config/areas.yaml)
+- Collection scripts stubs + Step 2/3a/6 runners
+
+NEXT (blocked on credentials / Neal caps)
+- Fill .env (ABN GUID, DataForSEO, Places key + spend caps)
+- Create Google Sheet and import output/sheet_bundle_* tabs
+- Smoke-test: python scripts/search_businesses.py --limit-suburbs 1
+- Then full Step 2 → 3 → 4 → 5 → 6 → clean → Neal 20-row check

@@ -1,0 +1,67 @@
+# Target LGAs for this run. Change this file to reuse for any [AREA].
+project:
+  name: roofing-dataset-nsw-illawarra-highlands
+  trade: roofing
+  owner: Isuru
+  checker: Neal
+  posted: "2026-11-06"
+
+lgas:
+  - code: "18450"
+    name: Wollongong
+    area_label: Wollongong
+  - code: "16900"
+    name: Shellharbour
+    area_label: Illawarra / Shellharbour
+  - code: "16950"
+    name: Shoalhaven
+    area_label: Shoalhaven–Nowra
+  - code: "18350"
+    name: Wingecarribee
+    area_label: Southern Highlands
+
+# Suburbs used for Map pack (Tab 4) monthly re-run
+main_suburbs:
+  Wollongong:
+    - Wollongong
+    - Figtree
+    - Corrimal
+    - Fairy Meadow
+    - Unanderra
+    - Dapto
+  Shellharbour:
+    - Shellharbour
+    - Albion Park
+    - Warilla
+    - Shell Cove
+    - Flinders (NSW)
+  Shoalhaven:
+    - Nowra
+    - Bomaderry
+    - Ulladulla
+    - Berry
+    - Huskisson
+    - Vincentia
+  Wingecarribee:
+    - Bowral
+    - Mittagong
+    - Moss Vale
+    - Bundanoon
+    - Robertson
+
+search_terms:
+  - roofer
+  - roof plumber
+  - roof restoration
+  - metal roofing
+  - roof tiler
+
+# Drop rules (log reason in Notes / dropped log)
+exclude_categories_keywords:
+  - gutter only
+  - gutters only
+  - roofing supplies
+  - building supplies
+  - hardware
+  - steel supplier
+  - wholesale

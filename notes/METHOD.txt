@@ -1,0 +1,53 @@
+Roofing dataset — method (Isuru / checker Neal)
+================================================
+
+Why
+---
+Own local roofing dataset for 4 LGAs to (1) list roofing owners for fold-ins
+and (2) area facts to rank hub location. Unique, checked, cleaned public data.
+
+LGAs
+----
+Wollongong, Shellharbour, Shoalhaven (Nowra), Wingecarribee (Southern Highlands)
+
+Rules
+-----
+- Public business data only
+- No homeowner personal data, no bought lists
+- Engineer never contacts businesses (outreach: Matt; send: Neal)
+- Nic privacy check (APP + Spam Act) before list is used for outreach
+- DataForSEO approved (Neal 6 Nov 2026) on group account with spend cap
+- Google Places via official API only (backup)
+
+Done line
+---------
+One Google Sheet: Businesses | Area demand | Roof signals | Map pack | Notes
+Every row: source_link + collection_date. Neal sample-checks 20 rows.
+
+Suburb driver
+-------------
+ABS ASGS Edition 3 correspondence CG_SAL_2021_LGA_2021.csv
+Primary LGA where RATIO_FROM_TO >= 0.5
+Built file: data/processed/suburb_list.csv
+
+Scripts (parameterised by config/areas.yaml)
+--------------------------------------------
+1. scripts/build_suburb_list.py
+2. scripts/init_sheet_bundle.py
+3. scripts/search_businesses.py   [--provider dataforseo|places]
+4. scripts/filter_non_roofers.py
+5. scripts/enrich_abn.py
+6. scripts/map_pack.py
+
+Still MISSING from Neal
+-----------------------
+- Deadline
+- DataForSEO spend cap
+- Google Places spend cap
+
+Credentials you need before Step 2 API runs
+-------------------------------------------
+1. Copy .env.example → .env
+2. ABN_GUID from abr.business.gov.au web services
+3. DATAFORSEO_LOGIN / DATAFORSEO_PASSWORD (group account)
+4. GOOGLE_PLACES_API_KEY (backup)

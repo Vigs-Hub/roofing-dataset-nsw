@@ -1,0 +1,13 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.netlify/
+data/raw/*.zip
+output/
+*.log
+credentials/
+service-account*.json
+**/tokens*.txt
+**/*credentials*.csv
