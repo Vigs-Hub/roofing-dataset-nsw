@@ -39,6 +39,12 @@ Scripts (parameterised by config/areas.yaml)
 5. scripts/enrich_abn.py
 6. scripts/map_pack.py
 
+Demo UI
+-------
+streamlit run app.py
+Shows overview, pipeline status, suburb list, business CSVs when present.
+Works without API keys (suburb coverage + status); search tabs fill after runs.
+
 Still MISSING from Neal
 -----------------------
 - Deadline
