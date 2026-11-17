@@ -76,28 +76,41 @@ def _auth_header(login: str, password: str) -> dict[str, str]:
 
 
 def dataforseo_maps_live(query: str, location_name: str) -> list[dict[str, Any]]:
-    """Live Google Maps search via DataForSEO."""
+    """Live Google Maps search via DataForSEO SERP Maps API."""
     login = env_required("DATAFORSEO_LOGIN")
     password = env_required("DATAFORSEO_PASSWORD")
-    url = "https://api.dataforseo.com/v3/business_data/google/maps/search/live"
+    # Correct endpoint: Live Google Maps SERP (old business_data/.../maps/search/live is 404)
+    url = "https://api.dataforseo.com/v3/serp/google/maps/live/advanced"
     payload = [
         {
             "keyword": query,
             "location_name": location_name,
             "language_code": "en",
+            "device": "desktop",
+            "os": "windows",
             "depth": 20,
+            "se_domain": "google.com.au",
+            # local-intent queries (trade + suburb) work better with this off
+            "search_places": False,
         }
     ]
     resp = requests.post(url, headers=_auth_header(login, password), json=payload, timeout=120)
-    resp.raise_for_status()
+    if resp.status_code >= 400:
+        raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:500]}")
     data = resp.json()
     if data.get("status_code") != 20000:
         raise RuntimeError(f"DataForSEO error: {data.get('status_message')} | {json.dumps(data)[:500]}")
 
     items: list[dict[str, Any]] = []
     for task in data.get("tasks") or []:
+        if task.get("status_code") not in (20000, None):
+            raise RuntimeError(
+                f"Task error {task.get('status_code')}: {task.get('status_message')} | {json.dumps(task)[:500]}"
+            )
         for result in task.get("result") or []:
-            items.extend(result.get("items") or [])
+            for item in result.get("items") or []:
+                if item.get("type") in (None, "maps_search"):
+                    items.append(item)
     return items
 
 
@@ -125,13 +138,21 @@ def normalize_dataforseo(item: dict[str, Any], suburb: str, lga: str, term: str)
     place_id = item.get("place_id") or item.get("cid") or ""
     name = item.get("title") or item.get("name") or ""
     phone = item.get("phone") or ""
-    website = item.get("url") or item.get("domain") or ""
-    address = item.get("address") or ""
+    domain = (item.get("domain") or "").strip()
+    website = ""
+    if domain:
+        website = domain if domain.startswith("http") else f"https://{domain}"
+    elif item.get("contact_url"):
+        website = item.get("contact_url") or ""
+    address = item.get("address") or item.get("snippet") or ""
     rating = item.get("rating", {}).get("value") if isinstance(item.get("rating"), dict) else item.get("rating")
     reviews = item.get("rating", {}).get("votes_count") if isinstance(item.get("rating"), dict) else item.get("reviews_count")
     maps_url = item.get("url") or (f"https://www.google.com/maps/place/?q=place_id:{place_id}" if place_id else "")
-    categories = item.get("category") or item.get("category_ids") or ""
-    if isinstance(categories, list):
+    categories = item.get("category") or ""
+    extra = item.get("additional_categories") or []
+    if isinstance(extra, list) and extra:
+        categories = "|".join([str(categories)] + [str(c) for c in extra if c]) if categories else "|".join(str(c) for c in extra)
+    elif isinstance(categories, list):
         categories = "|".join(str(c) for c in categories)
     bid = hashlib.sha1(f"{place_id}|{phone}|{website}|{name}".encode()).hexdigest()[:12]
     return {
@@ -151,8 +172,8 @@ def normalize_dataforseo(item: dict[str, Any], suburb: str, lga: str, term: str)
         "include_flag": "pending",
         "drop_reason": "",
         "source_search_term": term,
-        "source_provider": "dataforseo_google_maps",
-        "source_link": maps_url or "https://api.dataforseo.com/v3/business_data/google/maps/search/live",
+        "source_provider": "dataforseo_google_maps_serp",
+        "source_link": maps_url or "https://api.dataforseo.com/v3/serp/google/maps/live/advanced",
         "collection_date": today(),
         "notes": "",
     }
@@ -254,7 +275,8 @@ def main() -> None:
             print(f"[{args.provider}] {query}")
             try:
                 if args.provider == "dataforseo":
-                    location_name = f"{suburb},New South Wales,Australia"
+                    # NSW-level location; suburb is already in the keyword
+                    location_name = "New South Wales,Australia"
                     items = dataforseo_maps_live(query, location_name)
                     (raw_dir / f"{suburb}_{term}.json").write_text(
                         json.dumps(items, ensure_ascii=False, indent=2), encoding="utf-8"

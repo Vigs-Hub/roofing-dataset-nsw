@@ -42,7 +42,7 @@ def main() -> None:
         print(f"Map pack: {query}")
         try:
             if args.provider == "dataforseo":
-                items = dataforseo_maps_live(query, f"{suburb},New South Wales,Australia")
+                items = dataforseo_maps_live(query, "New South Wales,Australia")
                 provider = "dataforseo_google_maps"
                 for i, item in enumerate(items[:3], start=1):
                     rating = item.get("rating", {})
@@ -62,7 +62,7 @@ def main() -> None:
                             "maps_url": maps_url,
                             "search_query": query,
                             "source_provider": provider,
-                            "source_link": maps_url or "https://api.dataforseo.com/v3/business_data/google/maps/search/live",
+                            "source_link": maps_url or "https://api.dataforseo.com/v3/serp/google/maps/live/advanced",
                             "date_checked": today(),
                         }
                     )
